@@ -7,6 +7,9 @@ import { Response } from 'express';
 import { MulterRequest } from 'src/middlewares/multer-request.interface';
 import { Payload } from 'src/security/payload.interface';
 import { SeatInfoDTO } from 'src/seats/dto/seat.dto';
+import { SeatValidationPipe } from 'src/seats/pipes/seat-validation.pipe';
+import { ShowValidationPipe } from './pipes/show-validation.pipe';
+import { registrationAuthorityPipe } from '../users/pipes/registration-authority.pipe';
 
 @Controller('show')
 export class ShowController {
@@ -16,9 +19,9 @@ export class ShowController {
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard)
   async registerShow(
-    @GetUser() user: Payload,
-    @Body() showDTO: ShowDTO,
-    @Body() seatInfoDTO: SeatInfoDTO,
+    @GetUser(registrationAuthorityPipe) user: Payload,
+    @Body(ShowValidationPipe) showDTO: ShowDTO,
+    @Body(SeatValidationPipe) seatInfoDTO: SeatInfoDTO,
     @Req() req: MulterRequest,
     @Res() res: Response
   ): Promise<any> {

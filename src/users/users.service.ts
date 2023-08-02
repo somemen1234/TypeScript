@@ -26,7 +26,7 @@ export class UserService {
       where: { email: newUser.email },
     });
 
-    if (existUser) throw new HttpException('이미 존재하는 이메일입니다.', HttpStatus.BAD_REQUEST);
+    if (existUser) throw new HttpException('이미 존재하는 이메일입니다.', HttpStatus.CONFLICT);
 
     await this.userRepository.save(newUser);
   }
@@ -47,6 +47,7 @@ export class UserService {
       is_admin: existUser.is_admin,
       point: existUser.point,
     };
+    //jwtRaddis
     return {
       accessToken: this.jwtService.sign(payload),
       username: existUser.name,
@@ -56,7 +57,7 @@ export class UserService {
   async tokenValidateUser(userId: number): Promise<UserDTO | undefined> {
     return await this.userRepository.findOne({
       where: { id: userId },
-      select: ['id', 'name', 'is_admin', 'point'],
+      select: ['id', 'email', 'name', 'is_admin', 'point', 'profile_image'],
     });
   }
 }

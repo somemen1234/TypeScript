@@ -6,7 +6,7 @@ import { Seat } from './entity/seat.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Seat])],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, SeatService],
   controllers: [SeatController],
   providers: [SeatService],
 })

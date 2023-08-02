@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Show } from './entity/show.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Repository, Transaction } from 'typeorm';
 import { ShowDTO } from './dto/show.dto';
-import { SeatInfoDTO } from 'src/seats/dto/seat.dto';
+import { RegistSeatDTO, SeatInfoDTO } from 'src/seats/dto/seat.dto';
 import { SeatCategory } from 'src/seats/seat-category.enum';
 import { SeatService } from 'src/seats/seats.service';
 
@@ -17,27 +17,47 @@ export class ShowService {
   ) {}
 
   async register(showDTO: ShowDTO, seatInfoDTO: SeatInfoDTO): Promise<void> {
-    let existShow = await this.showRepository.createQueryBuilder('shows').where('shows.user_id = :id', { id: showDTO.user_id });
-    if (existShow) throw new HttpException('이미 존재하는 공연입니다.', HttpStatus.BAD_REQUEST);
-    const { V_SEATS, R_SEATS, S_SEATS, A_SEATS } = seatInfoDTO;
-    const maxSeat = 40;
+    const exsitShow = await this.showRepository.findOne({
+      where: { location: showDTO.location, show_time: showDTO.show_time },
+    });
+    if (exsitShow) throw new HttpException('이미 해당 시간과 해당 지역에 공연이 있습니다.', HttpStatus.CONFLICT);
+    const { V_SEATS, V_PRICE, R_SEATS, R_PRICE, S_SEATS, S_PRICE, A_SEATS, A_PRICE } = seatInfoDTO;
+    let maxSeat = showDTO.max_seat;
 
-    const queryRunner = await this.dataSource.createQueryRunner();
+    const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
-    await queryRunner.startTransaction();
+    await queryRunner.startTransaction('READ COMMITTED');
 
     try {
       const { id } = await this.showRepository.save(showDTO);
-      for (let i = 0; i < A_SEATS; i++, maxSeat - 1) {
-        const seatDTO: any = {
-          show_id: id,
-          seat_number: maxSeat - i,
-          grade: SeatCategory.AGRADE,
-          price: seatInfoDTO.A_PRICE,
-        };
-        await this.seatService.saveSeat(seatDTO);
+      if (A_SEATS > 0) {
+        for (let i = maxSeat; i <= maxSeat - A_SEATS; i--) {
+          const seatDTO: RegistSeatDTO = { show_id: id, seat_number: i, grade: SeatCategory.AGRADE, price: A_PRICE };
+          await this.seatService.saveSeat(seatDTO, queryRunner.manager);
+        }
       }
-      await queryRunner.commitTransaction;
+      maxSeat -= A_SEATS;
+      if (S_SEATS > 0) {
+        for (let i = maxSeat; i <= maxSeat - S_SEATS; i--) {
+          const seatDTO: RegistSeatDTO = { show_id: id, seat_number: i, grade: SeatCategory.SUPERIOR, price: S_PRICE };
+          await this.seatService.saveSeat(seatDTO, queryRunner.manager);
+        }
+      }
+      maxSeat -= S_SEATS;
+      if (R_SEATS > 0) {
+        for (let i = maxSeat; i <= maxSeat - R_SEATS; i--) {
+          const seatDTO: RegistSeatDTO = { show_id: id, seat_number: i, grade: SeatCategory.Royal, price: R_PRICE };
+          await this.seatService.saveSeat(seatDTO, queryRunner.manager);
+        }
+      }
+      maxSeat -= R_SEATS;
+      if (V_SEATS < 0) {
+        for (let i = maxSeat; i <= maxSeat - V_SEATS; i--) {
+          const seatDTO: RegistSeatDTO = { show_id: id, seat_number: i, grade: SeatCategory.VIP, price: V_PRICE };
+          await this.seatService.saveSeat(seatDTO, queryRunner.manager);
+        }
+      }
+      await queryRunner.commitTransaction();
     } catch (transactionError) {
       console.error(transactionError);
       await queryRunner.rollbackTransaction();
