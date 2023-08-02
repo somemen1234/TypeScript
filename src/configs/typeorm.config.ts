@@ -14,7 +14,7 @@ export function ormConfig(): TypeOrmModuleOptions {
     port: Number(process.env.MYSQL_PORT),
     username: process.env.MYSQL_USERNAME,
     password: process.env.MYSQL_PASSWORD,
-    logging: true,
+    // logging: true,
     synchronize: commonConf.SYNCRONIZE,
     entities: commonConf.ENTITIES,
     namingStrategy: new SnakeNamingStrategy(),

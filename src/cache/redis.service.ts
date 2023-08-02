@@ -1,28 +1,27 @@
-import { Injectable, Inject } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 
 @Injectable()
-export class RedisCacheService {
-  constructor(
-    @Inject(CACHE_MANAGER)
-    private readonly cache: Cache
-  ) {}
+// export class RedisService {
+//   constructor(
+//     @Inject(CACHE_MANAGER)
+//     private cacheManager: Cache
+//   ) {}
+//   async set(key: string, value: unknown): Promise<void> {
+//     try {
+//       await this.cacheManager.set(key, value, 0);
+//     } catch (error) {
+//       throw new InternalServerErrorException();
+//     }
+//   }
 
-  async get(key: string): Promise<any> {
-    return await this.cache.get(key);
-  }
-
-  async set(key: string, value: any, ttl?: any): Promise<any> {
-    console.log(key, value, ttl);
-    return await this.cache.set(key, value, ttl);
-  }
-
-  async reset() {
-    await this.cache.reset();
-  }
-
-  async delete(key: string) {
-    await this.cache.del(key);
-  }
-}
+//   async get(key: string): Promise<unknown> {
+//     try {
+//       return await this.cacheManager.get(key);
+//     } catch (error) {
+//       throw new InternalServerErrorException();
+//     }
+//   }
+// }
+export class RedisService {}

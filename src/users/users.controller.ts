@@ -1,4 +1,17 @@
-import { Body, Controller, Post, ValidationPipe, Res, Get, UseGuards, Req, HttpStatus, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  ValidationPipe,
+  Res,
+  Get,
+  UseGuards,
+  Req,
+  HttpStatus,
+  UsePipes,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { UserService } from './users.service';
 import { LoginDTO, SignUpDTO } from 'src/users/dto/user.dto';
 import { Response, Request } from 'express';
@@ -7,12 +20,30 @@ import { UserValidationPipe } from './pipes/user-validation.pipe';
 import { MulterRequest } from '../middlewares/multer-request.interface';
 import { GetUser } from 'src/security/get-user.decorator';
 import { Payload } from 'src/security/payload.interface';
-import { RedisCacheService } from 'src/cache/redis.service';
 import { JwtService } from '@nestjs/jwt';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Controller('user')
+@Injectable()
 export class UserController {
-  constructor(private userService: UserService, private cacheManager: RedisCacheService, private jwtService: JwtService) {}
+  constructor(
+    @Inject(CACHE_MANAGER)
+    private cacheManager: Cache,
+    private userService: UserService,
+    private jwtService: JwtService
+  ) {}
+
+  @Get('/redis')
+  async setRedis() {
+    console.log(this.cacheManager);
+    try {
+      await this.cacheManager.set('hello4', ' world');
+      console.log('done setting', await this.cacheManager.store.keys());
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   @Post('/signUp')
   @UsePipes(ValidationPipe)

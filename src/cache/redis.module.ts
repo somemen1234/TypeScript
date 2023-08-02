@@ -1,26 +1,24 @@
-import { CacheModule } from '@nestjs/cache-manager';
-import { Module } from '@nestjs/common';
-import * as redisStore from 'cache-manager-redis-store';
-import * as dotenv from 'dotenv';
-import { RedisCacheService } from './redis.service';
-dotenv.config();
+// import { Module } from '@nestjs/common';
+// import * as redisStore from 'cache-manager-redis-store';
+// import { ConfigModule, ConfigService } from '@nestjs/config';
+// import { CacheModule } from '@nestjs/cache-manager';
+// import { RedisService } from './redis.service';
 
-const cacheModule = CacheModule.register({
-  useFactory: async () => {
-    console.log('1111111111111111111111111111111111111111111111111111111111111');
-    console.log(redisStore, process.env.REDIS_PORT);
-    return {
-      store: redisStore,
-      host: 'localhost',
-      port: process.env.REDIS_PORT,
-      // ttl: '30m',
-    };
-  },
-});
+// const redisModuleFactory = CacheModule.registerAsync({
+//   imports: [ConfigModule],
+//   useFactory: async (configService: ConfigService) => ({
+//     // ttl: configService.get('CACHE_TTL'),
+//     store: redisStore,
+//     host: 'localhost',
+//     port: 6379,
+//   }),
+//   inject: [ConfigService],
+// });
 
-@Module({
-  imports: [cacheModule],
-  providers: [RedisCacheService],
-  exports: [RedisCacheService],
-})
-export class RedisCacheModule {}
+// @Module({
+//   imports: [redisModuleFactory],
+//   controllers: [],
+//   providers: [RedisService],
+//   exports: [RedisService],
+// })
+export class RedisModule {}
