@@ -52,8 +52,7 @@ export class UserController {
     const newDate: number = Date.now() / 1000;
     const result = this.jwtService.verify(token);
     const expireTime = Math.ceil(result.exp - newDate);
-    const a = await this.cacheManager.set(token, expireTime, expireTime);
-    console.log(a);
+    await this.cacheManager.set(token, 'blackList', expireTime);
 
     return res.status(HttpStatus.OK).json({ message: '로그아웃 하셨습니다.' });
   }

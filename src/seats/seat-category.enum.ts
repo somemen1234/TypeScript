@@ -1,6 +1,6 @@
 export enum SeatCategory {
-  VIP = 'V',
-  Royal = 'R',
-  SUPERIOR = 'S',
-  AGRADE = 'A',
+  VIP = 'VIP',
+  Royal = 'Royal',
+  SUPERIOR = 'SUPERIOR',
+  AGRADE = 'AGRADE',
 }

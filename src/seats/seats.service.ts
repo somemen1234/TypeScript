@@ -11,6 +11,10 @@ export class SeatService {
     private showRepository: Repository<Seat>
   ) {}
   async saveSeat(seatDTO: RegistSeatDTO, transactionManger: EntityManager): Promise<void> {
-    await transactionManger.getRepository(Seat).save(seatDTO);
+    const createSeat = await this.showRepository.create({
+      ...seatDTO,
+      show: { id: seatDTO.show_id },
+    });
+    await transactionManger.getRepository(Seat).save(createSeat);
   }
 }

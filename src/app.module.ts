@@ -13,9 +13,9 @@ import { RedisCacheModule } from './cache/redis.module';
 
 @Module({
   imports: [
+    RedisCacheModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({ useFactory: ormConfig }),
-    RedisCacheModule,
     UserModule,
     ReservationsModule,
     ReservationDetailsModule,

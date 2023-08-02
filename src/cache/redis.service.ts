@@ -1,21 +1,20 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
+import { Cache, Milliseconds } from 'cache-manager';
 
 @Injectable()
 export class RedisCacheService {
   constructor(
     @Inject(CACHE_MANAGER)
-    private readonly cache: Cache
+    private cache: Cache
   ) {}
 
   async get(key: string): Promise<any> {
     return await this.cache.get(key);
   }
-
-  async set(key: string, value: any, ttl?: any): Promise<any> {
-    console.log(key, value, ttl);
-    return await this.cache.set(key, value, ttl);
+  async set(key: string, value: any, ttl?: Milliseconds) {
+    // @ts-ignore
+    await this.cache.set(key, value, { ttl });
   }
 
   async reset() {

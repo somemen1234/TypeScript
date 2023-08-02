@@ -5,22 +5,21 @@ import * as dotenv from 'dotenv';
 import { RedisCacheService } from './redis.service';
 dotenv.config();
 
-const cacheModule = CacheModule.register({
+const cacheModule = CacheModule.registerAsync({
   useFactory: async () => {
-    console.log('1111111111111111111111111111111111111111111111111111111111111');
-    console.log(redisStore, process.env.REDIS_PORT);
     return {
       store: redisStore,
-      host: 'localhost',
+      host: process.env.REDIS_HOST,
       port: process.env.REDIS_PORT,
-      // ttl: '30m',
+      auth_pass: process.env.REDIS_PWD,
     };
   },
+  isGlobal: true,
 });
 
 @Module({
   imports: [cacheModule],
-  providers: [RedisCacheService],
   exports: [RedisCacheService],
+  providers: [RedisCacheService],
 })
 export class RedisCacheModule {}

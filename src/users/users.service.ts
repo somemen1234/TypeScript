@@ -42,7 +42,7 @@ export class UserService {
       throw new HttpException('존재하지 않은 이메일이거나 비밀번호가 틀렸습니다.', HttpStatus.PRECONDITION_FAILED);
 
     const payload: Payload = {
-      user_id: existUser.id,
+      id: existUser.id,
       name: existUser.name,
       is_admin: existUser.is_admin,
       point: existUser.point,

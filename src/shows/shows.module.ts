@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UploadMiddleware } from 'src/middlewares/upload.middleware';
 import { SeatService } from 'src/seats/seats.service';
 import { Seat } from 'src/seats/entity/seat.entity';
+import { RedisCacheService } from 'src/cache/redis.service';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { Seat } from 'src/seats/entity/seat.entity';
   ],
   exports: [TypeOrmModule],
   controllers: [ShowController],
-  providers: [ShowService, SeatService],
+  providers: [ShowService, SeatService, RedisCacheService],
 })
 export class ShowModule {
   configure(consumer: MiddlewareConsumer) {
