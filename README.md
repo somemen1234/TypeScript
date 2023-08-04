@@ -21,10 +21,10 @@
 </p>
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
+  
 [Nest](https://github.com/nestjs/nest) Nestjs를 이용한 공연 예매 웹 서비스
+
+ERD: ![drawSQL-show-service-export-2023-08-04](https://github.com/somemen1234/TypeScript/assets/28723327/b296c957-f003-4f4b-8169-0cb25181adfc)
 ---
 ## 1. user & auth
  ### 1-1. 회원가입
