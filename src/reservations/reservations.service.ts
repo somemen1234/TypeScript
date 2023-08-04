@@ -6,7 +6,6 @@ import { DataSource, Repository } from 'typeorm';
 import { ReservationDetailService } from 'src/reservation_details/reservation_details.service';
 import { SeatService } from 'src/seats/seats.service';
 import { UserService } from 'src/users/users.service';
-import { ShowService } from 'src/shows/shows.service';
 
 @Injectable()
 export class ReservationService {

@@ -6,7 +6,6 @@ import { ReservationSeatInfoDTO } from 'src/reservations/dto/reservation.dto';
 @Injectable()
 export class ReservationDetailService {
   async createReservationDetail(reservationDTO: ReservationSeatInfoDTO, transactionManger: EntityManager): Promise<void> {
-    console.log(reservationDTO);
     const createReservationDetail = await transactionManger.getRepository(Reservation_Detail).create({
       reservation: { id: reservationDTO.reservation_id },
       seat: { id: reservationDTO.seat_id },

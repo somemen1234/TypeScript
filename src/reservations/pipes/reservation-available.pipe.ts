@@ -5,6 +5,7 @@ import { SeatService } from 'src/seats/seats.service';
 export class ReservationAvailablePipe implements PipeTransform {
   constructor(readonly seatService: SeatService) {}
   transform(value: Array<ReservationSeatInfoDTO>) {
+    if (!value.length) throw new BadRequestException('좌석 번호를 입력해주세요.');
     let arr = [];
     for (let i = 0; i < value.length; i++) {
       if (!(value[i].seat_number / 1)) throw new BadRequestException('좌석 번호는 0보다 큰 양의 정수만 입력 가능합니다.');

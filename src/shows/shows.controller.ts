@@ -1,18 +1,4 @@
-import {
-  Controller,
-  Post,
-  UseGuards,
-  UsePipes,
-  ValidationPipe,
-  Body,
-  Req,
-  Res,
-  HttpStatus,
-  Get,
-  Param,
-  Query,
-  HttpException,
-} from '@nestjs/common';
+import { Controller, Post, UseGuards, Body, Req, Res, HttpStatus, Get, Param, Query } from '@nestjs/common';
 import { ShowService } from './shows.service';
 import { AuthGuard } from 'src/security/auth.guard';
 import { GetUser } from 'src/security/get-user.decorator';
@@ -31,11 +17,10 @@ export class ShowController {
 
   @Post('/register')
   @UseGuards(AuthGuard)
-  @UsePipes(ValidationPipe)
   async registerShow(
-    @GetUser(registrationAuthorityPipe) user: Payload,
     @Body(ShowValidationPipe) showDTO: ShowDTO,
     @Body(SeatValidationPipe) seatInfoDTO: SeatInfoDTO,
+    @GetUser(registrationAuthorityPipe) user: Payload,
     @Req() req: MulterRequest,
     @Res() res: Response
   ): Promise<any> {

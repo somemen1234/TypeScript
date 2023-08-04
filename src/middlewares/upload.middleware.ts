@@ -17,31 +17,19 @@ export class UploadMiddleware implements NestMiddleware {
     });
 
     try {
-      const allowedExtensions = [
-        '.png',
-        '.jpg',
-        '.jpeg',
-        '.jfif',
-        '.exif',
-        '.tiff',
-        '.bmp',
-        '.gif',
-      ];
+      const allowedExtensions = ['.png', '.jpg', '.jpeg', '.jfif', '.exif', '.tiff', '.bmp', '.gif'];
 
       const upload = multer({
         storage: multerS3({
           s3,
           bucket: process.env.BUCKET_NAME,
           contentType: multerS3.AUTO_CONTENT_TYPE,
-          shouldTransform: true,
           key: function (_, file: Express.Multer.File, callback: Callback) {
             const fileId = uuid();
             const type = file.mimetype.split('/')[1];
 
             if (
-              !allowedExtensions.includes(
-                path.extname(file.originalname.toLowerCase()),
-              ) ||
+              !allowedExtensions.includes(path.extname(file.originalname.toLowerCase())) ||
               !file.mimetype.startsWith('image/')
             ) {
               const errorMessage = '이미지 파일만 업로드가 가능합니다.';

@@ -19,14 +19,13 @@ export class UserService {
     let { password } = newUser;
     const salt = await bcrypt.genSalt();
 
-    password = await bcrypt.hash(password, salt);
-    newUser.password = password;
-
     let existUser: UserDTO = await this.userRepository.findOne({
       where: { email: newUser.email },
     });
-
     if (existUser) throw new HttpException('이미 존재하는 이메일입니다.', HttpStatus.CONFLICT);
+
+    password = await bcrypt.hash(password, salt);
+    newUser.password = password;
 
     await this.userRepository.save(newUser);
   }
@@ -35,10 +34,10 @@ export class UserService {
     let existUser: User = await this.userRepository.findOne({
       where: { email: newUser.email },
     });
+    if (!existUser) throw new HttpException('존재하지 않은 이메일이거나 비밀번호가 틀렸습니다.', HttpStatus.PRECONDITION_FAILED);
 
     const validatePassword = await bcrypt.compare(newUser.password, existUser.password);
-
-    if (!existUser || !validatePassword)
+    if (!validatePassword)
       throw new HttpException('존재하지 않은 이메일이거나 비밀번호가 틀렸습니다.', HttpStatus.PRECONDITION_FAILED);
 
     const payload: Payload = {
@@ -47,7 +46,7 @@ export class UserService {
       is_admin: existUser.is_admin,
       point: existUser.point,
     };
-    //jwtRaddis
+
     return {
       accessToken: this.jwtService.sign(payload),
       username: existUser.name,

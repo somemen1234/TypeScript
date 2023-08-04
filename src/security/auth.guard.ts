@@ -12,7 +12,7 @@ export class AuthGuard extends NestAuthGuard('jwt') {
   // @ts-ignore
   async canActivate(context: ExecutionContext): Promise<boolean> | Observable<boolean> | boolean {
     const request = context.switchToHttp().getRequest();
-    if (!request.headers.authorization) throw new UnauthorizedException();
+    if (!request.headers.authorization) throw new UnauthorizedException('인증이 되지 않은 잘못된 토큰입니다. ');
 
     const token = request.headers.authorization.split(' ')[1];
     const result = await this.tokenValidation(token);

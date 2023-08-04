@@ -1,4 +1,4 @@
-import { Body, Controller, Post, ValidationPipe, Res, Get, UseGuards, Req, HttpStatus, UsePipes } from '@nestjs/common';
+import { Body, Controller, Post, Res, Get, UseGuards, Req, HttpStatus } from '@nestjs/common';
 import { UserService } from './users.service';
 import { LoginDTO, SignUpDTO } from 'src/users/dto/user.dto';
 import { Response, Request } from 'express';
@@ -15,7 +15,6 @@ export class UserController {
   constructor(private userService: UserService, private cacheManager: RedisCacheService, private jwtService: JwtService) {}
 
   @Post('/signUp')
-  @UsePipes(ValidationPipe)
   async signUpAccount(
     @Body(UserValidationPipe) UserDTO: SignUpDTO,
     @Req() req: MulterRequest,
@@ -29,7 +28,6 @@ export class UserController {
   }
 
   @Post('/login')
-  @UsePipes(ValidationPipe)
   async loginAccount(@Body() LoginDTO: LoginDTO, @Res() res: Response): Promise<Object> {
     const { accessToken, username } = await this.userService.login(LoginDTO);
 
