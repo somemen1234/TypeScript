@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { User } from '../../users/entity/user.entity';
 import { ShowCategory } from '../show-category.enum';
+import { Reservation } from 'src/reservations/entity/reservation.entity';
 
 @Entity('shows')
 export class Show extends BaseEntity {
@@ -53,6 +54,9 @@ export class Show extends BaseEntity {
 
   @OneToMany(() => Seat, (seat) => seat.show, { cascade: true })
   seats: Seat[];
+
+  @OneToMany(() => Reservation, (reservation) => reservation.show)
+  reservations: Reservation[];
 
   @ManyToOne(() => User, (user) => user.shows)
   user: User;

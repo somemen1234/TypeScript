@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Show } from './entity/show.entity';
 import { DataSource, Like, Repository } from 'typeorm';
-import { ShowDTO } from './dto/show.dto';
+import { ShowDTO, keywordDTO } from './dto/show.dto';
 import { RegistSeatDTO, SeatInfoDTO } from 'src/seats/dto/seat.dto';
 import { SeatCategory } from 'src/seats/seat-category.enum';
 import { SeatService } from 'src/seats/seats.service';
@@ -44,7 +44,6 @@ export class ShowService {
             grade: SeatCategory.AGRADE,
             price: A_PRICE,
           };
-          console.log(seatDTO);
           await this.seatService.saveSeat(seatDTO, queryRunner.manager);
         }
       }
@@ -66,7 +65,7 @@ export class ShowService {
           const seatDTO: RegistSeatDTO = {
             show_id: id,
             seat_number: i,
-            grade: SeatCategory.Royal,
+            grade: SeatCategory.ROYAL,
             price: R_PRICE,
           };
           await this.seatService.saveSeat(seatDTO, queryRunner.manager);
@@ -102,14 +101,25 @@ export class ShowService {
 
   async getShow(showId: number): Promise<any> {
     const show = await this.showRepository.findOne({ where: { id: showId } });
-    return show;
+    const availableReservation = await this.showRepository
+      .createQueryBuilder('show')
+      .innerJoin('show.seats', 'seat')
+      .where('show.id = :showId and seat.reservation != true', { showId })
+      .getOne();
+
+    let available: Boolean;
+    if (!availableReservation) available = false;
+    else available = true;
+
+    if (!show) throw new HttpException('해당하는 공연이 없습니다.', HttpStatus.NOT_FOUND);
+    return { show, available };
   }
 
-  async searchShow(keyword: string): Promise<any> {
-    const show = await this.showRepository.find({
-      where: { title: Like(`%${keyword}%`) },
+  async searchShow(search: keywordDTO): Promise<any> {
+    const shows = await this.showRepository.find({
+      where: { title: Like(`%${search.keyword}%`) },
       order: { created_at: 'DESC' },
     });
-    return show;
+    return shows;
   }
 }

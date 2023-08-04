@@ -5,7 +5,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -43,8 +42,7 @@ export class Seat extends BaseEntity {
   })
   updated_at: Date;
 
-  @OneToOne(() => Reservation_Detail)
-  @JoinColumn()
+  @OneToOne(() => Reservation_Detail, (reservation_detail) => reservation_detail.seat)
   reservation_detail: Reservation_Detail;
 
   @ManyToOne(() => Show, (show) => show.seats)

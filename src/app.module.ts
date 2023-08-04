@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './users/users.module';
-import { ReservationsModule } from './reservations/reservations.module';
-import { ReservationDetailsModule } from './reservation_details/reservation_details.module';
+import { ReservationModule } from './reservations/reservations.module';
+import { ReservationDetailModule } from './reservation_details/reservation_details.module';
 import { SeatModule } from './seats/seats.module';
 import { ShowModule } from './shows/shows.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -17,8 +17,8 @@ import { RedisCacheModule } from './cache/redis.module';
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({ useFactory: ormConfig }),
     UserModule,
-    ReservationsModule,
-    ReservationDetailsModule,
+    ReservationModule,
+    ReservationDetailModule,
     SeatModule,
     ShowModule,
   ],

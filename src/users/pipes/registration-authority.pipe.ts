@@ -1,4 +1,4 @@
-import { BadRequestException, PipeTransform, UnauthorizedException } from '@nestjs/common';
+import { PipeTransform, UnauthorizedException } from '@nestjs/common';
 import { Payload } from 'src/security/payload.interface';
 import { UserStatus } from '../user-status.enum';
 

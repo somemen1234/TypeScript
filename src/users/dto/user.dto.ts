@@ -8,8 +8,6 @@ export class UserDTO {
   profile_image: string;
   point: number;
   is_admin: UserStatus;
-  created_at: Date;
-  updated_at: Date;
 }
 
 export class SignUpDTO {
@@ -34,9 +32,6 @@ export class SignUpDTO {
 
   @IsString({ message: '가입 유형은 문자열로 입력해 주세요.' })
   is_admin: UserStatus;
-
-  created_at: Date;
-  updated_at: Date;
 }
 
 export class LoginDTO {

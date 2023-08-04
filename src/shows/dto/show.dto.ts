@@ -25,8 +25,11 @@ export class ShowDTO {
   @IsString({ message: '지역을 입력해 주세요.' })
   location: string;
 
-  created_at: Date;
-  updated_at: Date;
-
   user_id: number;
+}
+
+export class keywordDTO {
+  @IsString({ message: '검색어를 입력해 주세요.' })
+  @MinLength(2, { message: '검색어는 두 글자 이상입니다.' })
+  keyword: string;
 }

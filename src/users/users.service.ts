@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginDTO, UserDTO } from 'src/users/dto/user.dto';
 import { User } from 'src/users/entity/user.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from 'src/security/payload.interface';
@@ -59,5 +59,13 @@ export class UserService {
       where: { id: userId },
       select: ['id', 'email', 'name', 'is_admin', 'point', 'profile_image'],
     });
+  }
+
+  async pointDeduction(userId: number, totalPrice: number, userPoint: number, transactionManger: EntityManager): Promise<void> {
+    await transactionManger.getRepository(User).update({ id: userId }, { point: userPoint - totalPrice });
+  }
+
+  async pointRefund(userId: number, totalPrice: number, userPoint: number, transactionManger: EntityManager): Promise<void> {
+    await transactionManger.getRepository(User).update({ id: userId }, { point: userPoint + totalPrice });
   }
 }

@@ -16,7 +16,7 @@ import {
 import { ShowService } from './shows.service';
 import { AuthGuard } from 'src/security/auth.guard';
 import { GetUser } from 'src/security/get-user.decorator';
-import { ShowDTO } from './dto/show.dto';
+import { ShowDTO, keywordDTO } from './dto/show.dto';
 import { Response } from 'express';
 import { MulterRequest } from 'src/middlewares/multer-request.interface';
 import { Payload } from 'src/security/payload.interface';
@@ -24,7 +24,6 @@ import { SeatInfoDTO } from 'src/seats/dto/seat.dto';
 import { SeatValidationPipe } from 'src/seats/pipes/seat-validation.pipe';
 import { ShowValidationPipe } from './pipes/show-validation.pipe';
 import { registrationAuthorityPipe } from '../users/pipes/registration-authority.pipe';
-import { keywordValidationPipe } from './pipes/keyword-validation.pipe';
 
 @Controller('show')
 export class ShowController {
@@ -55,16 +54,15 @@ export class ShowController {
   }
 
   @Get('/search')
-  async searchShow(@Query('keyword', keywordValidationPipe) keyword: string, @Res() res: Response): Promise<any> {
-    const result = await this.ShowService.searchShow(keyword);
-    return res.status(HttpStatus.OK).json({ show: result });
+  async searchShow(@Query() keyword: keywordDTO, @Res() res: Response): Promise<any> {
+    const results = await this.ShowService.searchShow(keyword);
+    return res.status(HttpStatus.OK).json({ show: results });
   }
 
   @Get(':showId')
   async getShow(@Param('showId') showId: number, @Res() res: Response): Promise<any> {
     const result = await this.ShowService.getShow(showId);
 
-    if (!result) throw new HttpException('해당하는 공연이 없습니다.', HttpStatus.NOT_FOUND);
-    return res.status(HttpStatus.OK).json({ show: result });
+    return res.status(HttpStatus.OK).json({ show: result.show, available: result.available });
   }
 }

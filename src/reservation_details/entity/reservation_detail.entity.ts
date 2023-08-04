@@ -1,8 +1,8 @@
 import { Reservation } from 'src/reservations/entity/reservation.entity';
 import { Seat } from 'src/seats/entity/seat.entity';
+
 import {
   BaseEntity,
-  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -30,7 +30,7 @@ export class Reservation_Detail extends BaseEntity {
   })
   updated_at: Date;
 
-  @OneToOne(() => Seat, (seat) => seat.reservation)
+  @OneToOne(() => Seat, (seat) => seat.reservation_detail)
   @JoinColumn()
   seat: Seat;
 

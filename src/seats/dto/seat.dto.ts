@@ -1,4 +1,4 @@
-import { IsNumber, IsNumberString, MaxLength } from 'class-validator';
+import { IsNumber } from 'class-validator';
 import { SeatCategory } from '../seat-category.enum';
 import { Type } from 'class-transformer';
 
@@ -7,9 +7,6 @@ export class SeatDTO {
   seat_number: number;
   grade: string;
   price: number;
-  reservation: Boolean;
-  create_at: Date;
-  update_at: Date;
 }
 
 export class SeatInfoDTO {
